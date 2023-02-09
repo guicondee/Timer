@@ -1,36 +1,12 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as zod from 'zod'
-//
-import { MinutesAmountInput, TaskInput } from "../../style"
-import { FormContainer } from "./styles"
+import { FormContainer, MinutesAmountInput, TaskInput } from "./styles"
+import { useContext } from "react";
+import { CyclesContext } from "../..";
+import { useFormContext } from "react-hook-form";
 
-
-const newCyrcleFormValidationSchema = zod.object({
-  task: zod.string().min(1, 'Informe a tarefa'),
-  minutesAmount: zod.number()
-    .min(1, 'O ciclo precisa ser de no minimo 5 minutos')
-    .max(60, 'O ciclo precisa ser de no máximo 60 minutos')
-})
 
 export function NewCycleForm() {
-
-  // interface NewCyrcleFormData {
-  //   task: string
-  //   minutesAmount: number
-  // }
-
-  // .função typeScript utilizando o zod, me dando a tipagem acima dos meus inputs
-  type NewCyrcleFormData = zod.infer<typeof newCyrcleFormValidationSchema>
-
-  const { register, handleSubmit, watch, reset } = useForm<NewCyrcleFormData>({
-    resolver: zodResolver(newCyrcleFormValidationSchema),
-    defaultValues: {
-      task: '',
-      minutesAmount: 0
-    }
-  });
-
+  const { activeCycle } = useContext(CyclesContext)
+  const { register } = useFormContext()
 
   return (
     <FormContainer>
