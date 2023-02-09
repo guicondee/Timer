@@ -4,13 +4,13 @@ import {
   StartCountdowButton,
   StopCountdowButton,
 } from "./style";
-
-import { useForm } from 'react-hook-form';
-import { useEffect, useState } from "react";
-import { differenceInSeconds } from "date-fns";
+import { createContext, useState } from "react";
 import { NewCycleForm } from "./components/NewCycleForm";
 import { Countdow } from "./components/Countdow";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
+import { FormProvider } from "react-hook-form";
 
 interface CyclesProps {
   id: string
@@ -20,13 +20,68 @@ interface CyclesProps {
   interruptedDate?: Date
   finishedDate?: Date
 }
+
+interface CyclesContextType {
+  activeCycle: CyclesProps | undefined
+  activeCycleId: string | null
+  amountSecondsPassed: number
+  markCurrentCycleAsFinished: () => void
+  setSecondsPassed: (seconds: number) => void
+}
+
+export const CyclesContext = createContext({} as CyclesContextType)
+
+const newCyrcleFormValidationSchema = zod.object({
+  task: zod.string().min(1, 'Informe a tarefa'),
+  minutesAmount: zod.number()
+    .min(1, 'O ciclo precisa ser de no minimo 5 minutos')
+    .max(60, 'O ciclo precisa ser de no máximo 60 minutos')
+})
+
+// interface NewCyrcleFormData {
+//   task: string
+//   minutesAmount: number
+// }
+
+// .função typeScript utilizando o zod, me dando a tipagem acima dos meus inputs
+type NewCyrcleFormData = zod.infer<typeof newCyrcleFormValidationSchema>
+
 export function Home() {
   const [cycle, setCycle] = useState<CyclesProps[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
+  const newCycleForm = useForm<NewCyrcleFormData>({
+    resolver: zodResolver(newCyrcleFormValidationSchema),
+    defaultValues: {
+      task: '',
+      minutesAmount: 0
+    }
+  });
 
-  const task = watch('task')
-  const isSubmitDisable = !task
+  const { handleSubmit, reset, watch } = newCycleForm
+
+  const activeCycle = cycle.find((cycle) => cycle.id === activeCycleId)
+
+  function markCurrentCycleAsFinished() {
+    setCycle((state) =>
+      state.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() }
+        } else {
+          return cycle
+        }
+      })
+    )
+  }
+
+  function setSecondsPassed(seconds: number) {
+    setAmountSecondsPassed(seconds)
+  }
+
+  function handleStopButton() {
+    setActiveCycleId(null)
+  }
 
   function handleCreateNewCycle(props: NewCyrcleFormData) {
     const id = String(new Date().getTime())
@@ -44,47 +99,26 @@ export function Home() {
     reset()
   }
 
-  function handleStopButton() {
-    setCycle((state) =>
-      state.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return { ...cycle, interruptedDate: new Date() }
-        } else {
-          return cycle
-        }
-      })
-    )
-
-    setActiveCycleId(null)
-
-  }
-
-  const activeCycle = cycle.find((cycle) => cycle.id === activeCycleId)
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
-
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
-
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
-
-
-
-  useEffect(() => {
-    if (activeCycle) {
-      document.title = `${minutes}:${seconds}`
-    }
-  }, [minutes, seconds, activeCycle])
+  const task = watch('task')
+  const isSubmitDisable = !task
 
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action=''>
-        <NewCycleForm />
-        <Countdow
-          activeCycleId={activeCycleId}
-          setCycle={setCycle}
-          activeCycle={activeCycle}
-        />
+        <CyclesContext.Provider
+          value={{
+            activeCycle,
+            activeCycleId,
+            markCurrentCycleAsFinished,
+            amountSecondsPassed,
+            setSecondsPassed
+          }}>
+          <FormProvider {...newCycleForm}>
+            <NewCycleForm />
+          </FormProvider>
+          <Countdow />
+        </CyclesContext.Provider>
+
         {activeCycle ? (
           <StopCountdowButton onClick={handleStopButton} type="button">
             <HandPalm size={24} />
