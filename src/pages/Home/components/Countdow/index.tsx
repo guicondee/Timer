@@ -52,6 +52,7 @@ export function Countdow() {
       document.title = `${minutes}:${seconds}`
     }
   }, [minutes, seconds, activeCycle])
+
   return (
     <CountDowContainer>
       <span>{minutes[0]}</span>
