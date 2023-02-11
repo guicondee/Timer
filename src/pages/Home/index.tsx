@@ -42,7 +42,6 @@ const newCyrcleFormValidationSchema = zod.object({
 //   task: string
 //   minutesAmount: number
 // }
-
 // .função typeScript utilizando o zod, me dando a tipagem acima dos meus inputs
 type NewCyrcleFormData = zod.infer<typeof newCyrcleFormValidationSchema>
 
