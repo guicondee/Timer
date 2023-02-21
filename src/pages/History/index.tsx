@@ -5,7 +5,7 @@ import { CyclesContext } from "../../contexts/CyclesContext";
 import { HistoryContainer, HistoryList, Status } from "./styles";
 
 export function History() {
-  const { cycle } = useContext(CyclesContext)
+  const { cycles } = useContext(CyclesContext)
 
   return (
     <HistoryContainer>
@@ -24,7 +24,7 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            {cycle.map((data) => {
+            {cycles.map((data) => {
               return (
                 <tr>
                   <td>{data.task}</td>
