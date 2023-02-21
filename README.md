@@ -1,6 +1,6 @@
 <a id="-screenshot"></a>
 
-## Pomodoro Timer
+## Timer
 
 ![CapaWeb](src/assets/print1.png)
 ![CapaWeb](src/assets/print2.png)
