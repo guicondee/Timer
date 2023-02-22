@@ -26,10 +26,10 @@ export function History() {
           <tbody>
             {cycles.map((data) => {
               return (
-                <tr>
+                <tr key={data.id}>
                   <td>{data.task}</td>
                   <td>{data.minutesAmount} Minutos</td>
-                  <td>{formatDistanceToNow(data.startDate, {
+                  <td>{formatDistanceToNow(new Date(data.startDate), {
                     addSuffix: true,
                     locale: ptBR,
                   })}</td>
