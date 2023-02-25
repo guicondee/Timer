@@ -75,5 +75,4 @@ npm run dev
 ## 📝 Licença
 
 Este projeto é [MIT licensed](./LICENSE).
-
-##### _#CompartilheConhecimento_
+ 
