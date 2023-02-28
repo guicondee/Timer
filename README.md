@@ -11,7 +11,7 @@
 
 ## 💻 Sobre o Projeto
 
-🚀 Projeto para administração de tempo.
+🚀 Projeto para administração de tempo e projetos.
 
 
 &nbsp;
