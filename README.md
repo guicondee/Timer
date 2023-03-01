@@ -75,4 +75,7 @@ npm run dev
 ## 📝 Licença
 
 Este projeto é [MIT licensed](./LICENSE).
- 
+
+## 👁️ Acesse o projeto 
+
+https://timer-guicondee.vercel.app/
