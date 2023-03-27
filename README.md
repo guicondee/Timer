@@ -11,7 +11,7 @@
 
 ## 💻 Sobre o Projeto
 
-🚀 Projeto Pomodoro para administração de tempo.
+🚀 Projeto para administração de tempo e projetos.
 
 
 &nbsp;
@@ -76,4 +76,6 @@ npm run dev
 
 Este projeto é [MIT licensed](./LICENSE).
 
-##### _#CompartilheConhecimento_
+## 👁️ Acesse o projeto 
+
+https://timer-guicondee.vercel.app/
